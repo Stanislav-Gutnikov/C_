@@ -9,11 +9,6 @@
 #include <pthread.h>
 
 
-/*
-Запуск:
- parallel -j 20 ./client ::: msg{1..20}
-*/
-
 int thread_counter = 0;
 pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER; // инициализация мьютекса
 int server_socket;

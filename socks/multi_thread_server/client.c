@@ -6,6 +6,11 @@
 #include <string.h>
 
 
+/*
+Запуск:
+ parallel -j 20 ./client ::: msg{1..20}
+*/
+
 void check(int res, char *msg) {
     if (res < 0) {
         perror(msg);
