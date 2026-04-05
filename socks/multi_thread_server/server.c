@@ -78,7 +78,9 @@ void *response(void *arg) {
     close(c_socket);
     //меняем через мьютекс, чтобы другой поток не изменил пока меняем:
     write(STDOUT_FILENO, "Processing...\n", 14);
+
     sleep(5); // ИСКУССТВЕННАЯ ЗАДЕРЖКА!!! УБРАТЬ!
+    
     pthread_mutex_lock(&m);
     thread_counter--;
     pthread_mutex_unlock(&m);
