@@ -1,0 +1,36 @@
+gutnikov@localhost:~/my_prjs/C_/asm$ gdb -q ./mem_counter
+Reading symbols from ./mem_counter...
+(No debugging symbols found in ./mem_counter)
+(gdb) break _start
+Breakpoint 1 at 0x401000
+(gdb) run
+Starting program: /home/gutnikov/my_prjs/C_/asm/mem_counter 
+
+Breakpoint 1, 0x0000000000401000 in _start ()
+(gdb) x/10i _start
+=> 0x401000 <_start>:   mov    0x402000,%rax
+   0x401008 <_start+8>: add    $0x1,%rax
+   0x40100c <_start+12>:        mov    %rax,0x402000
+   0x401014 <_start+20>:        add    $0x1,%rax
+   0x401018 <_start+24>:        mov    %rax,0x402000
+   0x401020 <_start+32>:        mov    $0x3c,%eax
+   0x401025 <_start+37>:        mov    $0x0,%edi
+   0x40102a <_start+42>:        syscall
+   0x40102c:    add    %al,(%rax)
+   0x40102e:    add    %al,(%rax)
+(gdb) break *0x40102a
+Breakpoint 2 at 0x40102a
+(gdb) continue
+Continuing.
+
+Breakpoint 2, 0x000000000040102a in _start ()
+(gdb) info registers rax rdi
+rax            0x3c                60
+rdi            0x0                 0
+(gdb) x/gx &counter
+0x402000:       0x000000000000000c
+(gdb) x/gx 0x402000
+0x402000:       0x000000000000000c
+(gdb) set {long}0x402000 = 42
+(gdb) x/gx 0x402000
+0x402000:       0x000000000000002a

@@ -1,0 +1,496 @@
+gutnikov@localhost:~/my_prjs/C_/asm/low_to_high$ gdb -q ./low_to_high
+Reading symbols from ./low_to_high...
+(No debugging symbols found in ./low_to_high)
+(gdb) break transform_msg 
+Breakpoint 1 at 0x401032
+(gdb) break skip 
+Breakpoint 2 at 0x401048
+(gdb) run
+Starting program: /home/gutnikov/my_prjs/C_/asm/low_to_high/low_to_high 
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.centos.org/>
+Enable debuginfod for this session? (y or [n]) n
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) info registers rax rcx rsi al
+rax            0x0                 0
+rcx            0xd                 13
+rsi            0x40200c            4202508
+al             0x0                 0
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401048 in skip ()
+(gdb) info registers rax rcx rsi al
+rax            0x21                33
+rcx            0xd                 13
+rsi            0x40200c            4202508
+al             0x21                33
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) info registers rax rcx rsi al
+rax            0x21                33
+rcx            0xc                 12
+rsi            0x40200b            4202507
+al             0x21                33
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) info registers rax rcx rsi al
+rax            0x44                68
+rcx            0xc                 12
+rsi            0x40200b            4202507
+al             0x44                68
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401048 in skip ()
+(gdb) info registers rax rcx rsi al
+rax            0x44                68
+rcx            0xc                 12
+rsi            0x40200b            4202507
+al             0x44                68
+(gdb) x/bx *0x40200b
+0xd002144:      ❌️ Cannot access memory at address 0xd002144
+(gdb) x/bx 0x40200b
+0x40200b:       0x44
+(gdb) q
+A debugging session is active.
+
+        Inferior 1 [process 73781] will be killed.
+
+Quit anyway? (y or n) y
+gutnikov@localhost:~/my_prjs/C_/asm/low_to_high$ nasm -f elf64 -o low_to_high.o low_to_high.asm 
+gutnikov@localhost:~/my_prjs/C_/asm/low_to_high$ ld low_to_high.o -o low_to_high
+gutnikov@localhost:~/my_prjs/C_/asm/low_to_high$ gdb -q ./low_to_high
+Reading symbols from ./low_to_high...
+(No debugging symbols found in ./low_to_high)
+(gdb) break transform_msg 
+Breakpoint 1 at 0x401032
+(gdb) break skip 
+Breakpoint 2 at 0x401050
+(gdb) x/10i $rip
+❌️ No registers.
+(gdb) x/10i $rip
+❌️ No registers.
+(gdb) run
+Starting program: /home/gutnikov/my_prjs/C_/asm/low_to_high/low_to_high 
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.centos.org/>
+Enable debuginfod for this session? (y or [n]) n
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) x/10i $rip
+=> 0x401032 <transform_msg>:    cmp    $0x0,%rcx
+   0x401036 <transform_msg+4>:  je     0x401066 <do_exit>
+   0x401038 <transform_msg+6>:  mov    (%rsi),%al
+   0x40103a <transform_msg+8>:  cmp    $0x61,%al
+   0x40103c <transform_msg+10>: jb     0x401050 <skip>
+   0x40103e <transform_msg+12>: cmp    $0x7a,%al
+   0x401040 <transform_msg+14>: ja     0x401050 <skip>
+   0x401042 <transform_msg+16>: sub    $0x20,%al
+   0x401044 <transform_msg+18>: mov    %al,(%rsi)
+   0x401046 <transform_msg+20>: sub    $0x1,%rcx
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401050 in skip ()
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) info registers rax rcx rsi al
+rax            0x44                68
+rcx            0xb                 11
+rsi            0x40200a            4202506
+al             0x44                68
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) info registers rax rcx rsi al
+rax            0x4c                76
+rcx            0xa                 10
+rsi            0x402009            4202505
+al             0x4c                76
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) info registers rax rcx rsi al
+rax            0x52                82
+rcx            0x9                 9
+rsi            0x402008            4202504
+al             0x52                82
+(gdb) x/14bx $msg 
+❌️ Value can't be converted to integer.
+(gdb) x/14bx &msg 
+0x402000:       0x48    0x65    0x6c    0x6c    0x6f    0x2c    0x20    0x57
+0x402008:       0x6f    0x52    0x4c    0x44    0x21    0x00
+(gdb) x/14bs &msg 
+0x402000:       "Hello, WoRLD!"
+0x40200e:       "\r"
+0x402010:       ""
+0x402011:       ""
+0x402012:       ""
+0x402013:       ""
+0x402014:       ""
+0x402015:       ""
+0x402016:       ""
+0x402017:       ""
+0x402018:       ""
+0x402019:       ""
+0x40201a:       ""
+0x40201b:       ""
+(gdb) x/s &msg 
+0x402000:       "Hello, WoRLD!"
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) x/s &msg 
+0x402000:       "Hello, WORLD!"
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401050 in skip ()
+(gdb) x/s &msg 
+0x402000:       "Hello, WORLD!"
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) x/s &msg 
+0x402000:       "Hello, WORLD!"
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401050 in skip ()
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401050 in skip ()
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) x/s &msg 
+0x402000:       "HellO, WORLD!"
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401050 in skip ()
+(gdb) x/s &msg 
+0x402000:       "HELLO, WORLD!"
+(gdb) x/gx &len
+0x40200e:       0x000000000000000d
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) c
+Continuing.
+[Inferior 1 (process 74548) exited normally]
+(gdb) break write_msg_len 
+Breakpoint 3 at 0x401024
+(gdb) run
+Starting program: /home/gutnikov/my_prjs/C_/asm/low_to_high/low_to_high 
+
+Breakpoint 3, 0x0000000000401024 in write_msg_len ()
+(gdb) info registers rax ecx rsi al
+rax            0x0                 0
+ecx            0xd                 13
+rsi            0x40200d            4202509
+al             0x0                 0
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) info breakpoints
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x0000000000401032 <transform_msg>
+        breakpoint already hit 1 time
+2       breakpoint     keep y   0x0000000000401050 <skip>
+3       breakpoint     keep y   0x0000000000401024 <write_msg_len>
+        breakpoint already hit 1 time
+(gdb) x/10i $rip
+=> 0x401032 <transform_msg>:    cmp    $0x0,%rcx
+   0x401036 <transform_msg+4>:  je     0x401066 <do_exit>
+   0x401038 <transform_msg+6>:  mov    (%rsi),%al
+   0x40103a <transform_msg+8>:  cmp    $0x61,%al
+   0x40103c <transform_msg+10>: jb     0x401050 <skip>
+   0x40103e <transform_msg+12>: cmp    $0x7a,%al
+   0x401040 <transform_msg+14>: ja     0x401050 <skip>
+   0x401042 <transform_msg+16>: sub    $0x20,%al
+   0x401044 <transform_msg+18>: mov    %al,(%rsi)
+   0x401046 <transform_msg+20>: sub    $0x1,%rcx
+(gdb) break *0x40103c
+Breakpoint 4 at 0x40103c
+(gdb) break *0x401040
+Breakpoint 5 at 0x401040
+(gdb) break do_exit
+Breakpoint 6 at 0x401066
+(gdb) info registers rax ecx rsi al
+rax            0x0                 0
+ecx            0xd                 13
+rsi            0x40200c            4202508
+al             0x0                 0
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x000000000040103c in transform_msg ()
+(gdb) info registers rax ecx rsi al
+rax            0x21                33
+ecx            0xd                 13
+rsi            0x40200c            4202508
+al             0x21                33
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401050 in skip ()
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x000000000040103c in transform_msg ()
+(gdb) info registers rax ecx rsi al
+rax            0x64                100
+ecx            0xc                 12
+rsi            0x40200b            4202507
+al             0x64                100
+(gdb) c
+Continuing.
+
+Breakpoint 5, 0x0000000000401040 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) info registers rax ecx rsi al
+rax            0x44                68
+ecx            0xb                 11
+rsi            0x40200a            4202506
+al             0x44                68
+(gdb) x/s &msg
+0x402000:       "Hello, WorlD!"
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x000000000040103c in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 5, 0x0000000000401040 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x000000000040103c in transform_msg ()
+(gdb) x/s &msg
+0x402000:       "Hello, WorLD!"
+(gdb) info registers rax ecx rsi al
+rax            0x72                114
+ecx            0xa                 10
+rsi            0x402009            4202505
+al             0x72                114
+(gdb) c
+Continuing.
+
+Breakpoint 5, 0x0000000000401040 in transform_msg ()
+(gdb) run
+The program being debugged has been started already.
+Start it from the beginning? (y or n) n
+❌️ Program not restarted.
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x000000000040103c in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 5, 0x0000000000401040 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x000000000040103c in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401050 in skip ()
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x000000000040103c in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401050 in skip ()
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x000000000040103c in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401050 in skip ()
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x000000000040103c in transform_msg ()
+(gdb) x/s &msg
+0x402000:       "Hello, WORLD!"
+(gdb) info registers rax rcx rsi al
+rax            0x6f                111
+rcx            0x5                 5
+rsi            0x402004            4202500
+al             0x6f                111
+(gdb) c
+Continuing.
+
+Breakpoint 5, 0x0000000000401040 in transform_msg ()
+(gdb) info registers rax rcx rsi al
+rax            0x6f                111
+rcx            0x5                 5
+rsi            0x402004            4202500
+al             0x6f                111
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) info registers rax rcx rsi al
+rax            0x4f                79
+rcx            0x4                 4
+rsi            0x402003            4202499
+al             0x4f                79
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x000000000040103c in transform_msg ()
+(gdb) x/s &msg
+0x402000:       "HellO, WORLD!"
+(gdb) info registers rax rcx rsi al
+rax            0x6c                108
+rcx            0x4                 4
+rsi            0x402003            4202499
+al             0x6c                108
+(gdb) c
+Continuing.
+
+Breakpoint 5, 0x0000000000401040 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x000000000040103c in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 5, 0x0000000000401040 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x000000000040103c in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 5, 0x0000000000401040 in transform_msg ()
+(gdb) x/s &msg
+0x402000:       "HeLLO, WORLD!"
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) x/s &msg
+0x402000:       "HELLO, WORLD!"
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x000000000040103c in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401050 in skip ()
+(gdb) c
+Continuing.
+
+Breakpoint 1, 0x0000000000401032 in transform_msg ()
+(gdb) c
+Continuing.
+
+Breakpoint 6, 0x0000000000401066 in do_exit ()
+(gdb) x/s &msg
+0x402000:       "HELLO, WORLD!"
+(gdb) info registers rax rcx rsi al
+rax            0x48                72
+rcx            0x0                 0
+rsi            0x401fff            4202495
+al             0x48                72
+(gdb) c
+Continuing.
+[Inferior 1 (process 75760) exited normally]

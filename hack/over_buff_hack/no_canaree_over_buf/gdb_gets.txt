@@ -1,0 +1,16 @@
+(gdb) print system
+$1 = {int (const char *)} 0x7ffff7c5c560 <__libc_system>
+
+(gdb) find 0x00007ffff7c28000, +2000000, "/bin/sh"
+0x7ffff7ddb799
+
+(gdb) find /b 0x00007ffff7c28000, 0x00007ffff7dc0000, 0x5f, 0xc3
+0x7ffff7d1bcfa <__spawnix+922>
+0x7ffff7d1d5b3 <exec_comm+147>
+0x7ffff7d1e31a <parse_backtick+458>
+0x7ffff7d1ebe8 <parse_dollars+264>
+0x7ffff7d21099 <parse_arith+489>
+0x7ffff7d217ac <wordexp+796>
+
+(gdb) find /b 0x00007ffff7c28000, 0x00007ffff7dc0000, 0xc3
+0x7ffff7c289fe <round_and_return-224178>

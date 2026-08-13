@@ -1,0 +1,160 @@
+#Сессия где a (в rax) = 5, b (в rbx = 10)
+
+gutnikov@localhost:~/my_prjs/C_/asm/cmp_jmp$ gdb -q ./cmp_jmp
+Reading symbols from ./cmp_jmp...
+(No debugging symbols found in ./cmp_jmp)
+(gdb) break _start
+Breakpoint 1 at 0x401000
+(gdb) stepi
+❌️ The program is not being run.
+(gdb) run
+Starting program: /home/gutnikov/my_prjs/C_/asm/cmp_jmp/cmp_jmp 
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.centos.org/>
+Enable debuginfod for this session? (y or [n]) n
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+
+Breakpoint 1, 0x0000000000401000 in _start ()
+(gdb) stepi
+0x0000000000401008 in _start ()
+(gdb) stepi
+0x0000000000401010 in _start ()
+(gdb) x/10i _start
+   0x401000 <_start>:   mov    0x402000,%rax
+   0x401008 <_start+8>: mov    0x402008,%rbx
+=> 0x401010 <_start+16>:        cmp    %rbx,%rax
+   0x401013 <_start+19>:        jl     0x40102e <not_equal>
+   0x401015 <_start+21>:        mov    $0x0,%eax
+   0x40101a <_start+26>:        mov    %rax,0x402010
+   0x401022 <_start+34>:        mov    $0x3c,%eax
+   0x401027 <_start+39>:        mov    $0x0,%edi
+   0x40102c <_start+44>:        syscall
+   0x40102e <not_equal>:        mov    $0x1,%eax
+(gdb) x/20i _start
+   0x401000 <_start>:   mov    0x402000,%rax
+   0x401008 <_start+8>: mov    0x402008,%rbx
+=> 0x401010 <_start+16>:        cmp    %rbx,%rax
+   0x401013 <_start+19>:        jl     0x40102e <not_equal>
+   0x401015 <_start+21>:        mov    $0x0,%eax
+   0x40101a <_start+26>:        mov    %rax,0x402010
+   0x401022 <_start+34>:        mov    $0x3c,%eax
+   0x401027 <_start+39>:        mov    $0x0,%edi
+   0x40102c <_start+44>:        syscall
+   0x40102e <not_equal>:        mov    $0x1,%eax
+   0x401033 <not_equal+5>:      mov    %rax,0x402010
+   0x40103b <not_equal+13>:     mov    $0x3c,%eax
+   0x401040 <not_equal+18>:     mov    $0x0,%edi
+   0x401045 <not_equal+23>:     syscall
+   0x401047:    add    %al,(%rax)
+--Type <RET> for more, q to quit, c to continue without paging--c
+   0x401049:    add    %al,(%rax)
+   0x40104b:    add    %al,(%rax)
+   0x40104d:    add    %al,(%rax)
+   0x40104f:    add    %al,(%rax)
+   0x401051:    add    %al,(%rax)
+(gdb) break *0x401010
+Breakpoint 2 at 0x401010
+(gdb) stepi
+0x0000000000401013 in _start ()
+(gdb) stepi
+0x000000000040102e in not_equal ()
+(gdb) info registers rax rbx
+rax            0x5                 5
+rbx            0xa                 10
+(gdb) break *0x401033
+Breakpoint 3 at 0x401033
+(gdb) stepi
+
+Breakpoint 3, 0x0000000000401033 in not_equal ()
+(gdb) x/gx &result
+0x402010:       0x0000000000000000
+(gdb) break *0x40103b
+Breakpoint 4 at 0x40103b
+(gdb) stepi
+
+Breakpoint 4, 0x000000000040103b in not_equal ()
+(gdb) x/gx &result
+0x402010:       0x0000000000000001                    # Как раз тут видим что в result записалось 1
+(gdb) continue
+Continuing.
+[Inferior 1 (process 46357) exited normally]
+
+
+# Сессия где где a (в rax) = 10, b (в rbx = 5)
+
+gutnikov@localhost:~/my_prjs/C_/asm/cmp_jmp$ gdb -q ./cmp_jmp
+Reading symbols from ./cmp_jmp...
+(No debugging symbols found in ./cmp_jmp)
+(gdb) break _start
+Breakpoint 1 at 0x401000
+(gdb) run
+Starting program: /home/gutnikov/my_prjs/C_/asm/cmp_jmp/cmp_jmp 
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.centos.org/>
+Enable debuginfod for this session? (y or [n]) n
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+
+Breakpoint 1, 0x0000000000401000 in _start ()
+(gdb) x/10i _start
+=> 0x401000 <_start>:   mov    0x402000,%rax
+   0x401008 <_start+8>: mov    0x402008,%rbx
+   0x401010 <_start+16>:        cmp    %rbx,%rax
+   0x401013 <_start+19>:        jl     0x40102e <not_equal>
+   0x401015 <_start+21>:        mov    $0x0,%eax
+   0x40101a <_start+26>:        mov    %rax,0x402010
+   0x401022 <_start+34>:        mov    $0x3c,%eax
+   0x401027 <_start+39>:        mov    $0x0,%edi
+   0x40102c <_start+44>:        syscall
+   0x40102e <not_equal>:        mov    $0x1,%eax
+(gdb) break *0x401013
+Breakpoint 2 at 0x401013
+(gdb) stepi
+0x0000000000401008 in _start ()
+(gdb) continue
+Continuing.
+
+Breakpoint 2, 0x0000000000401013 in _start ()
+(gdb) x/10i _start
+   0x401000 <_start>:   mov    0x402000,%rax
+   0x401008 <_start+8>: mov    0x402008,%rbx
+   0x401010 <_start+16>:        cmp    %rbx,%rax
+=> 0x401013 <_start+19>:        jl     0x40102e <not_equal>
+   0x401015 <_start+21>:        mov    $0x0,%eax
+   0x40101a <_start+26>:        mov    %rax,0x402010
+   0x401022 <_start+34>:        mov    $0x3c,%eax
+   0x401027 <_start+39>:        mov    $0x0,%edi
+   0x40102c <_start+44>:        syscall
+   0x40102e <not_equal>:        mov    $0x1,%eax
+(gdb) info registers rax rbx
+rax            0xa                 10
+rbx            0x5                 5
+(gdb) break *0x40101a
+Breakpoint 3 at 0x40101a
+(gdb) x/gx &result
+0x402010:       0x0000000000000000
+(gdb) info registers rax
+rax            0xa                 10
+(gdb) break *0x401027
+Breakpoint 4 at 0x401027
+(gdb) x/gx &result
+0x402010:       0x0000000000000000
+(gdb) continue
+Continuing.
+
+Breakpoint 3, 0x000000000040101a in _start ()
+(gdb) x/gx &result
+0x402010:       0x0000000000000000
+(gdb) continue
+Continuing.
+
+Breakpoint 4, 0x0000000000401027 in _start ()
+(gdb) x/gx &result
+0x402010:       0x0000000000000000
+(gdb) continue
+Continuing.
+[Inferior 1 (process 48686) exited normally]
+(gdb) q

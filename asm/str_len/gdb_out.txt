@@ -1,0 +1,120 @@
+gutnikov@localhost:~/my_prjs/C_/asm/str_len$ gdb -q ./str_len
+Reading symbols from ./str_len...
+(No debugging symbols found in ./str_len)
+(gdb) break _start 
+Breakpoint 1 at 0x401000
+(gdb) break do_while 
+Breakpoint 2 at 0x401014
+(gdb) run 
+Starting program: /home/gutnikov/my_prjs/C_/asm/str_len/str_len 
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.centos.org/>
+Enable debuginfod for this session? (y or [n]) n
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+
+Breakpoint 1, 0x0000000000401000 in _start ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401014 in do_while ()
+(gdb) info registers rax rsi
+rax            0x0                 0
+rsi            0x402000            4202496
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401014 in do_while ()
+(gdb) info registers rax rsi rcx
+rax            0x48                72
+rsi            0x402001            4202497
+rcx            0x1                 1
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401014 in do_while ()
+(gdb) info registers rax rsi rcx
+rax            0x65                101
+rsi            0x402002            4202498
+rcx            0x2                 2
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401014 in do_while ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401014 in do_while ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401014 in do_while ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401014 in do_while ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401014 in do_while ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401014 in do_while ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401014 in do_while ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401014 in do_while ()
+(gdb) info registers rax rsi rcx
+rax            0x72                114
+rsi            0x40200a            4202506
+rcx            0xa                 10
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401014 in do_while ()
+(gdb) info registers rax rsi rcx
+rax            0x6c                108
+rsi            0x40200b            4202507
+rcx            0xb                 11
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401014 in do_while ()
+(gdb) x/10i end_while 
+   0x401024 <end_while>:        mov    %rcx,0x40200e
+   0x40102c <end_while+8>:      mov    $0x3c,%eax
+   0x401031 <end_while+13>:     mov    $0x0,%edi
+   0x401036 <end_while+18>:     syscall
+   0x401038:    add    %al,(%rax)
+   0x40103a:    add    %al,(%rax)
+   0x40103c:    add    %al,(%rax)
+   0x40103e:    add    %al,(%rax)
+   0x401040:    add    %al,(%rax)
+   0x401042:    add    %al,(%rax)
+
+(gdb) break *0x40102c
+Breakpoint 3 at 0x40102c
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401014 in do_while ()
+(gdb) info registers rax rsi rcx
+rax            0x21                33
+rsi            0x40200d            4202509
+rcx            0xd                 13
+(gdb) c
+Continuing.
+
+Breakpoint 3, 0x000000000040102c in end_while ()
+(gdb) info registers rax rsi rcx
+rax            0x0                 0
+rsi            0x40200d            4202509
+rcx            0xd                 13
+(gdb) x/gx &len
+0x40200e:       0x000000000000000d

@@ -1,0 +1,112 @@
+gutnikov@localhost:~/my_prjs/C_/asm/factorial_func$ gdb -q ./factorial_func
+Reading symbols from ./factorial_func...
+(No debugging symbols found in ./factorial_func)
+(gdb) break _start
+Breakpoint 1 at 0x401000
+(gdb) run
+Starting program: /home/gutnikov/my_prjs/C_/asm/factorial_func/factorial_func 
+
+Breakpoint 1, 0x0000000000401000 in _start ()
+(gdb) x/10i _start
+=> 0x401000 <_start>:   mov    0x402000,%rdi
+   0x401008 <_start+8>: call   0x401021 <factorial>
+   0x40100d <_start+13>:        mov    %rax,0x402008
+   0x401015 <_start+21>:        mov    $0x3c,%eax
+   0x40101a <_start+26>:        mov    $0x0,%edi
+   0x40101f <_start+31>:        syscall
+   0x401021 <factorial>:        cmp    $0x1,%rdi
+   0x401025 <factorial+4>:      je     0x401036 <return>
+   0x401027 <factorial+6>:      push   %rdi
+   0x401028 <factorial+7>:      sub    $0x1,%rdi
+(gdb) break factorial
+Breakpoint 2 at 0x401021
+(gdb) x/10i factorial
+=> 0x401021 <factorial>:        cmp    $0x1,%rdi
+   0x401025 <factorial+4>:      je     0x401036 <return>
+   0x401027 <factorial+6>:      push   %rdi
+   0x401028 <factorial+7>:      sub    $0x1,%rdi
+   0x40102c <factorial+11>:     call   0x401021 <factorial>
+   0x401031 <factorial+16>:     pop    %rdi
+   0x401032 <factorial+17>:     mul    %rdi
+   0x401035 <factorial+20>:     ret
+   0x401036 <return>:   mov    $0x1,%eax
+   0x40103b <return+5>: ret
+(gdb) break return
+Breakpoint 3 at 0x401036
+(gdb) break *0x401035
+Breakpoint 4 at 0x401035
+(gdb) break *0x401015
+Breakpoint 5 at 0x401015
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401021 in factorial ()
+(gdb) info registers rax rdi
+rax            0x0                 0
+rdi            0x5                 5
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401021 in factorial ()
+(gdb) info registers rax rdi
+rax            0x0                 0
+rdi            0x4                 4
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401021 in factorial ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401021 in factorial ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401021 in factorial ()
+(gdb) info registers rax rdi
+rax            0x0                 0
+rdi            0x1                 1
+(gdb) c
+Continuing.
+
+Breakpoint 3, 0x0000000000401036 in return ()
+(gdb) info registers rax rdi
+rax            0x0                 0
+rdi            0x1                 1
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x0000000000401035 in factorial ()
+(gdb) info registers rax rdi
+rax            0x2                 2
+rdi            0x2                 2
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x0000000000401035 in factorial ()
+(gdb) info registers rax rdi
+rax            0x6                 6
+rdi            0x3                 3
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x0000000000401035 in factorial ()
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x0000000000401035 in factorial ()
+(gdb) info registers rax rdi
+rax            0x78                120
+rdi            0x5                 5
+(gdb) c
+Continuing.
+
+Breakpoint 5, 0x0000000000401015 in _start ()
+(gdb) info registers rax rdi
+rax            0x78                120
+rdi            0x5                 5
+(gdb) x/gx &result
+0x402008:       0x0000000000000078
+(gdb) c
+Continuing.
+[Inferior 1 (process 60381) exited normally]

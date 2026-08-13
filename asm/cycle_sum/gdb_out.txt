@@ -1,0 +1,107 @@
+gutnikov@localhost:~/my_prjs/C_/asm/cycle_sum$ gdb -q ./cycle_sum
+Reading symbols from ./cycle_sum...
+(No debugging symbols found in ./cycle_sum)
+(gdb) break _start
+Breakpoint 1 at 0x401000
+(gdb) run
+Starting program: /home/gutnikov/my_prjs/C_/asm/cycle_sum/cycle_sum 
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.centos.org/>
+Enable debuginfod for this session? (y or [n]) n
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+
+Breakpoint 1, 0x0000000000401000 in _start ()
+(gdb) x/10i _start
+=> 0x401000 <_start>:   movabs $0x402000,%rsi
+   0x40100a <_start+10>:        mov    0x402028,%rcx
+   0x401012 <_start+18>:        mov    $0x0,%eax
+   0x401017 <do_while>: add    (%rsi),%rax
+   0x40101a <do_while+3>:       add    $0x8,%rsi
+   0x40101e <do_while+7>:       dec    %rcx
+   0x401021 <do_while+10>:      cmp    $0x0,%rcx
+   0x401025 <do_while+14>:      jne    0x401017 <do_while>
+   0x401027 <do_while+16>:      mov    %rax,0x402030
+   0x40102f <do_while+24>:      mov    $0x3c,%eax
+(gdb) break do_while
+Breakpoint 2 at 0x401017
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401017 in do_while ()
+(gdb) info registers rax rsi rcx    # до итерации 1
+rax            0x0                 0
+rsi            0x402000            4202496
+rcx            0x5                 5
+(gdb) print 0x402000
+$1 = 4202496
+(gdb) x/gx 0x402000
+0x402000:       0x0000000000000001  # 1-й эл-т
+(gdb) x/gx 0x402008
+0x402008:       0x0000000000000002  # 2-й эл-т
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401017 in do_while ()
+(gdb) info registers rax rsi rcx    # итерация 1
+rax            0x1                 1
+rsi            0x402008            4202504
+rcx            0x4                 4
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401017 in do_while ()
+(gdb) info registers rax rsi rcx    # итерация 2
+rax            0x3                 3
+rsi            0x402010            4202512
+rcx            0x3                 3
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401017 in do_while ()
+(gdb) info registers rax rsi rcx    # итерация 3
+rax            0x6                 6
+rsi            0x402018            4202520
+rcx            0x2                 2
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x0000000000401017 in do_while ()
+(gdb) info registers rax rsi rcx    # итерация 4
+rax            0xa                 10
+rsi            0x402020            4202528
+rcx            0x1                 1
+(gdb) break *0x401027
+Breakpoint 3 at 0x401027
+(gdb) c
+Continuing.
+
+Breakpoint 3, 0x0000000000401027 in do_while ()
+(gdb) info registers rax rsi rcx    # итерация 5
+rax            0xf                 15
+rsi            0x402028            4202536
+rcx            0x0                 0
+(gdb) print &sum
+$2 = (<data variable, no debug info> *) 0x402030
+(gdb) x/gx &sum
+0x402030:       0x0000000000000000
+(gdb) x/3i 0x401027 
+=> 0x401027 <do_while+16>:      mov    %rax,0x402030
+   0x40102f <do_while+24>:      mov    $0x3c,%eax
+   0x401034 <do_while+29>:      mov    $0x0,%edi
+(gdb) break *0x401034
+Breakpoint 4 at 0x401034
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x0000000000401034 in do_while ()
+(gdb) info registers rax rsi rcx
+rax            0x3c                60
+rsi            0x402028            4202536
+rcx            0x0                 0
+(gdb) x/gx &sum
+0x402030:       0x000000000000000f # записали 15
+(gdb) c
+Continuing.
+[Inferior 1 (process 55862) exited normally]
